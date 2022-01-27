@@ -21,18 +21,18 @@ steps:
 
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
     includeRootFolder: true
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
 
-
-
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
-    azureSubscription: 'Visual Studio Enterprise Subscription(461db24f-c0a7-4a65-aa6b-764717134583)'
+    azureSubscription: 'azure-sub-connection'
     appType: 'webApp'
     WebAppName: 'shailenderwebapp'
     packageForLinux: '$(Build.ArtifactStagingDirectory)/*.zip'
+
+
