@@ -18,7 +18,17 @@ steps:
   inputs:
     contents: '*'
     targetFolder: $(Build.ArtifactStagingDirectory)
+
 - task: PublishBuildArtifacts@1
   inputs:
-    pathToPublish: $(Build.ArtifactStagingDirectory)
-    artifactName: MyBuildOutputs
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Visual Studio Enterprise Subscription(461db24f-c0a7-4a65-aa6b-764717134583)'
+    appType: 'webApp'
+    WebAppName: 'shailenderwebapp'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
