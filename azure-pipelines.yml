@@ -19,11 +19,15 @@ steps:
     contents: '*'
     targetFolder: $(Build.ArtifactStagingDirectory)
 
-- task: PublishBuildArtifacts@1
+- task: ArchiveFiles@2
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
+
 
 - task: AzureRmWebAppDeployment@4
   inputs:
@@ -31,4 +35,4 @@ steps:
     azureSubscription: 'Visual Studio Enterprise Subscription(461db24f-c0a7-4a65-aa6b-764717134583)'
     appType: 'webApp'
     WebAppName: 'shailenderwebapp'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/*.zip'
