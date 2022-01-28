@@ -9,17 +9,20 @@ trigger:
 
 pool: nodepool
 steps:
-  - 
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'run'
-      arguments: 'dotnet build --configuration Release'
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'run'
-      arguments: 'dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp'
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'publish'
-      publishWebProjects: true
-      arguments: '${{env.DOTNET_ROOT}}/myapp'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/**'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'azure-sub-connection'
+    appType: 'webApp'
+    appName: 'shailenderwebapp'
+    package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    deploymentMethod: 'auto'
+
